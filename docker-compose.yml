@@ -1,0 +1,84 @@
+services:
+  app:
+    build:
+      context: ./docker/php
+      args:
+        UID: ${UID:-1001}
+        GID: ${GID:-1001}
+    container_name: wishlist_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    networks:
+      - wishlist
+    depends_on:
+      - mysql
+      - redis
+
+  nginx:
+    image: nginx:alpine
+    container_name: wishlist_nginx
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - wishlist
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.4
+    container_name: wishlist_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-wishlist}
+      MYSQL_USER: ${DB_USERNAME:-wishlist}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-secret}
+    ports:
+      - "${FORWARD_DB_PORT:-3307}:3306"
+    volumes:
+      - wishlist_mysql_data:/var/lib/mysql
+    networks:
+      - wishlist
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-secret}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: wishlist_redis
+    restart: unless-stopped
+    networks:
+      - wishlist
+
+  node:
+    build:
+      context: ./docker/php
+      args:
+        UID: ${UID:-1001}
+        GID: ${GID:-1001}
+    container_name: wishlist_node
+    working_dir: /var/www/html
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - wishlist
+    profiles:
+      - dev
+
+networks:
+  wishlist:
+    driver: bridge
+
+volumes:
+  wishlist_mysql_data:
