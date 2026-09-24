@@ -141,3 +141,44 @@
         @apply bg-background text-foreground;
     }
 }
+
+/*
+ * The public event page has its own visual identity (configured per event)
+ * and must not flip to dark mode based on the visitor's system preference.
+ *
+ * Tailwind's `@theme` tokens (e.g. --color-card) resolve their `var(--card)`
+ * indirection once at the :root/.dark level, then inherit down as an
+ * already-resolved value — so descendants can't override the underlying
+ * --card variable to change them. We have to override the --color-* tokens
+ * themselves here instead.
+ */
+.event-page {
+    /*
+     * `color` is inherited from `body` (which resolves --color-foreground
+     * using :root/.dark, not this scope) unless we set it explicitly here —
+     * otherwise any element below that doesn't use a `text-*` utility class
+     * of its own (e.g. shadcn's Label/Input) keeps the visitor's dark-mode
+     * text color, which is invisible against this always-light background.
+     */
+    color: var(--color-foreground);
+
+    --color-background: oklch(1 0 0);
+    --color-foreground: oklch(0.145 0 0);
+    --color-card: oklch(1 0 0);
+    --color-card-foreground: oklch(0.145 0 0);
+    --color-popover: oklch(1 0 0);
+    --color-popover-foreground: oklch(0.145 0 0);
+    --color-primary: oklch(0.205 0 0);
+    --color-primary-foreground: oklch(0.985 0 0);
+    --color-secondary: oklch(0.97 0 0);
+    --color-secondary-foreground: oklch(0.205 0 0);
+    --color-muted: oklch(0.97 0 0);
+    --color-muted-foreground: oklch(0.556 0 0);
+    --color-accent: oklch(0.97 0 0);
+    --color-accent-foreground: oklch(0.205 0 0);
+    --color-destructive: oklch(0.577 0.245 27.325);
+    --color-destructive-foreground: oklch(0.577 0.245 27.325);
+    --color-border: oklch(0.922 0 0);
+    --color-input: oklch(0.922 0 0);
+    --color-ring: oklch(0.87 0 0);
+}

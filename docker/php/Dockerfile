@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     libxml2-dev \
     oniguruma-dev \
     icu-dev \
+    icu-data-full \
     nodejs \
     npm
 
