@@ -27,6 +27,21 @@ class EventShowControllerTest extends TestCase
             ->where('products.0.name', 'Liquidificador'));
     }
 
+    public function test_it_exposes_the_events_location(): void
+    {
+        $event = Event::factory()->create([
+            'is_published' => true,
+            'address' => 'Av. Paulista, 1000, São Paulo - SP',
+            'latitude' => -23.5613,
+            'longitude' => -46.6565,
+        ]);
+
+        $this->get("/{$event->slug}")->assertInertia(fn ($page) => $page
+            ->where('event.address', 'Av. Paulista, 1000, São Paulo - SP')
+            ->where('event.latitude', -23.5613)
+            ->where('event.longitude', -46.6565));
+    }
+
     public function test_unpublished_events_are_not_found_for_guests(): void
     {
         $event = Event::factory()->create(['is_published' => false]);

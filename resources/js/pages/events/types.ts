@@ -19,6 +19,9 @@ export type EventData = {
     event_date: string | null;
     description: string | null;
     story: string | null;
+    address: string | null;
+    latitude: number | null;
+    longitude: number | null;
     cover_image_url: string | null;
     gallery_urls: string[];
     primary_color: string | null;
@@ -105,6 +108,26 @@ export function grainBackgroundStyle(
         backgroundColor: primaryColor ?? DEFAULT_PRIMARY_COLOR,
         backgroundImage: noise,
     };
+}
+
+/**
+ * Builds a Google Maps "share → embed a map" iframe URL directly from
+ * coordinates, using the same `pb=` format Google's own embed dialog
+ * generates. This is an unofficial, undocumented format (not the paid Embed
+ * API), but it needs no API key and no billing account — Google could change
+ * it without notice, though it's been stable for years.
+ */
+export function googleMapsEmbedUrl(event: EventData): string | null {
+    if (event.latitude === null || event.longitude === null) {
+        return null;
+    }
+
+    const pb =
+        `!1m14!1m12!1m3!1d3000!2d${event.longitude}!3d${event.latitude}` +
+        '!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0' +
+        '!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr';
+
+    return `https://www.google.com/maps/embed?pb=${pb}`;
 }
 
 export function headingStyle(event: EventData): CSSProperties {

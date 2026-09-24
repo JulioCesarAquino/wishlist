@@ -68,6 +68,50 @@ class EventForm
                     ->helperText('Texto livre para contar a história do casal/evento. Aparece na seção "Nossa história" da página pública.')
                     ->rows(5)
                     ->columnSpanFull(),
+                Section::make('Localização')
+                    ->description('Exibida na página pública com um mapa. Vale para casamento, aniversário ou qualquer outro evento.')
+                    ->columns(2)
+                    ->components([
+                        Textarea::make('address')
+                            ->label('Endereço')
+                            ->required()
+                            ->rows(2)
+                            ->columnSpanFull()
+                            ->helperText('Rua, número, bairro e cidade — como deve aparecer para os convidados.')
+                            ->hintAction(
+                                Action::make('useCurrentLocation')
+                                    ->label('Usar minha localização atual')
+                                    ->icon(Heroicon::OutlinedMapPin)
+                                    ->alpineClickHandler(<<<'JS'
+                                        if (! navigator.geolocation) {
+                                            alert('Seu navegador não suporta geolocalização. Preencha o endereço e as coordenadas manualmente.');
+                                            return;
+                                        }
+                                        navigator.geolocation.getCurrentPosition(
+                                            (position) => {
+                                                $wire.set('data.latitude', position.coords.latitude);
+                                                $wire.set('data.longitude', position.coords.longitude);
+                                                alert('Localização obtida automaticamente. Ela pode não ser exata — confira no mapa e preencha o endereço abaixo.');
+                                            },
+                                            () => alert('Não foi possível obter sua localização automaticamente. Preencha o endereço e as coordenadas manualmente.'),
+                                        );
+                                        JS),
+                            ),
+                        TextInput::make('latitude')
+                            ->label('Latitude')
+                            ->numeric()
+                            ->step('any')
+                            ->minValue(-90)
+                            ->maxValue(90)
+                            ->requiredWith('longitude'),
+                        TextInput::make('longitude')
+                            ->label('Longitude')
+                            ->numeric()
+                            ->step('any')
+                            ->minValue(-180)
+                            ->maxValue(180)
+                            ->requiredWith('latitude'),
+                    ]),
                 Section::make('Aparência da página pública')
                     ->columns(2)
                     ->components([

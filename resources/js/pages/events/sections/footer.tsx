@@ -1,4 +1,4 @@
-import { Copy, Facebook, MessageCircle } from 'lucide-react';
+import { Copy, Facebook, MapPin, MessageCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -57,6 +57,18 @@ export function Footer({ event }: { event: EventData }) {
             </p>
 
             <div className="mb-4 flex justify-center gap-3">
+                {event.address && (
+                    <a
+                        href="#confirmar-presenca"
+                        className="flex size-9 items-center justify-center rounded-full border border-black/10 transition hover:bg-black/5"
+                        aria-label="Ver localização"
+                    >
+                        <MapPin
+                            className="size-4"
+                            style={bodyTextStyle(event)}
+                        />
+                    </a>
+                )}
                 {shareButtons.map((button) => (
                     <a
                         key={button.label}

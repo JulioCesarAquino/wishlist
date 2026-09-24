@@ -41,7 +41,7 @@ class AdminPanelProvider extends PanelProvider
                 .'<ellipse cx="12" cy="14.6" rx="9.3" ry="1.7" />'
                 .'<path d="M2.7 14.6 V20.3 Q12 23.7 21.3 20.3 V14.6" />'
                 .'</svg>'
-                .'<span style="font-family:\'Dancing Script\',cursive;font-weight:700;font-size:1.9rem;line-height:1;color:#F59E0B;transform:skewX(-10deg);margin-top:0.2rem">Wishlista</span>'
+                .'<span style="font-family:\'Dancing Script\',cursive;font-weight:700;font-size:1.9rem;line-height:1;color:#F59E0B;transform:skewX(-10deg);margin-top:0.2rem">Wishlisti</span>'
                 .'</div>',
             ))
             ->brandLogoHeight('5.5rem')

@@ -5,6 +5,7 @@ import { store as storeRsvp } from '@/routes/rsvp';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { LocationSection } from '@/pages/events/sections/location-section';
 import {
     accentButtonStyle,
     bodyTextStyle,
@@ -79,6 +80,8 @@ export function RsvpSection({ event, guest }: Props) {
                 <Button variant="outline" onClick={() => setEditing(true)}>
                     Alterar resposta
                 </Button>
+
+                <LocationSection event={event} />
             </div>
         );
     }
@@ -224,6 +227,8 @@ export function RsvpSection({ event, guest }: Props) {
                     Enviar confirmação
                 </Button>
             </div>
+
+            <LocationSection event={event} />
         </div>
     );
 }

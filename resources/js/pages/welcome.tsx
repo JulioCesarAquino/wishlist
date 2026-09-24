@@ -181,7 +181,7 @@ export default function Welcome() {
                 <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
                     <span className="flex items-center gap-2 text-lg font-semibold">
                         <AppLogoIcon className="size-6 text-amber-500" />
-                        Wishlista
+                        Wishlisti
                     </span>
                     <nav className="flex items-center gap-4">
                         {auth.user ? (
@@ -288,7 +288,7 @@ export default function Welcome() {
                 </main>
 
                 <footer className="px-6 py-8 text-center text-sm text-[#706f6c] dark:text-[#A1A09A]">
-                    <p>© {new Date().getFullYear()} Wishlista</p>
+                    <p>© {new Date().getFullYear()} Wishlisti</p>
                     <p className="mt-1 flex items-center justify-center gap-1.5">
                         Desenvolvido por Julio Cesar Aquino
                         <a

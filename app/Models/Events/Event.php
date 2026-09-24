@@ -30,6 +30,9 @@ use Spatie\Activitylog\Support\LogOptions;
  * @property array<int, string>|null $gallery
  * @property string|null $description
  * @property string|null $story
+ * @property string|null $address
+ * @property float|null $latitude
+ * @property float|null $longitude
  * @property string|null $mp_access_token
  * @property string|null $mp_public_key
  * @property bool $is_published
@@ -45,7 +48,8 @@ use Spatie\Activitylog\Support\LogOptions;
  */
 #[Fillable([
     'user_id', 'slug', 'type', 'title', 'event_date', 'cover_image',
-    'gallery', 'description', 'story', 'mp_access_token', 'mp_public_key', 'is_published', 'is_premium',
+    'gallery', 'description', 'story', 'address', 'latitude', 'longitude',
+    'mp_access_token', 'mp_public_key', 'is_published', 'is_premium',
     'primary_color', 'secondary_color', 'font_color_primary', 'font_color_secondary', 'font_family',
 ])]
 #[Hidden(['mp_access_token', 'mp_public_key'])]
@@ -76,6 +80,7 @@ class Event extends Model
             ->useLogName('event')
             ->logOnly([
                 'title', 'type', 'event_date', 'description', 'story', 'cover_image', 'gallery',
+                'address', 'latitude', 'longitude',
                 'primary_color', 'secondary_color', 'font_color_primary', 'font_color_secondary', 'font_family',
                 'is_published', 'is_premium',
             ])
@@ -119,6 +124,8 @@ class Event extends Model
             'gallery' => 'array',
             'is_published' => 'boolean',
             'is_premium' => 'boolean',
+            'latitude' => 'float',
+            'longitude' => 'float',
             'mp_access_token' => 'encrypted',
             'mp_public_key' => 'encrypted',
         ];
