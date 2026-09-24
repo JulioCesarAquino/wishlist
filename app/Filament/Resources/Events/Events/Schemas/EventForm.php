@@ -7,6 +7,7 @@ use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Slider;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -52,6 +53,14 @@ class EventForm
                     ->imageEditor()
                     ->imagePreviewHeight('160')
                     ->directory('events/covers'),
+                Slider::make('cover_effect_intensity')
+                    ->label('Intensidade do efeito de desfoque na capa')
+                    ->helperText('100 é o efeito completo (foto embaçada até o convidado passar o mouse ou tocar). 0 exibe a foto normalmente, sem nenhum efeito.')
+                    ->range(minValue: 0, maxValue: 100)
+                    ->step(5)
+                    ->tooltips()
+                    ->default(100)
+                    ->columnStart(2),
                 FileUpload::make('gallery')
                     ->label('Galeria de fotos')
                     ->image()

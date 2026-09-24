@@ -43,6 +43,7 @@ use Spatie\Activitylog\Support\LogOptions;
  * @property string|null $font_color_primary
  * @property string|null $font_color_secondary
  * @property string|null $font_family
+ * @property int $cover_effect_intensity
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -51,6 +52,7 @@ use Spatie\Activitylog\Support\LogOptions;
     'gallery', 'description', 'story', 'address', 'latitude', 'longitude',
     'mp_access_token', 'mp_public_key', 'is_published', 'is_premium',
     'primary_color', 'secondary_color', 'font_color_primary', 'font_color_secondary', 'font_family',
+    'cover_effect_intensity',
 ])]
 #[Hidden(['mp_access_token', 'mp_public_key'])]
 class Event extends Model
@@ -72,6 +74,7 @@ class Event extends Model
      */
     protected $attributes = [
         'is_premium' => false,
+        'cover_effect_intensity' => 100,
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -82,7 +85,7 @@ class Event extends Model
                 'title', 'type', 'event_date', 'description', 'story', 'cover_image', 'gallery',
                 'address', 'latitude', 'longitude',
                 'primary_color', 'secondary_color', 'font_color_primary', 'font_color_secondary', 'font_family',
-                'is_published', 'is_premium',
+                'cover_effect_intensity', 'is_published', 'is_premium',
             ])
             ->logOnlyDirty()
             ->dontLogEmptyChanges()

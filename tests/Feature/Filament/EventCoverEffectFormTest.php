@@ -1,0 +1,52 @@
+<?php
+
+namespace Tests\Feature\Filament;
+
+use App\Filament\Resources\Events\Events\Pages\CreateEvent;
+use App\Models\Events\Event;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
+use Tests\TestCase;
+
+class EventCoverEffectFormTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_cover_effect_intensity_defaults_to_the_maximum(): void
+    {
+        $host = User::factory()->create(['is_admin' => false]);
+
+        $this->actingAs($host);
+
+        Livewire::test(CreateEvent::class)
+            ->fillForm([
+                'type' => 'aniversario',
+                'title' => 'Festa da Maria',
+                'address' => 'Rua das Flores, 123',
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame(100, Event::first()->cover_effect_intensity);
+    }
+
+    public function test_cover_effect_intensity_can_be_lowered_to_disable_the_effect(): void
+    {
+        $host = User::factory()->create(['is_admin' => false]);
+
+        $this->actingAs($host);
+
+        Livewire::test(CreateEvent::class)
+            ->fillForm([
+                'type' => 'aniversario',
+                'title' => 'Festa da Maria',
+                'address' => 'Rua das Flores, 123',
+                'cover_effect_intensity' => 0,
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame(0, Event::first()->cover_effect_intensity);
+    }
+}

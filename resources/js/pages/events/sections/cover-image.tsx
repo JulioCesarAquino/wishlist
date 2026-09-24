@@ -3,6 +3,11 @@ import { useCallback, useEffect, useRef } from 'react';
 type Props = {
     src: string;
     alt: string;
+    /**
+     * 0-100. 100 is the full blur + hover/ripple reveal effect; 0 shows the
+     * photo plain, with no blur and no interaction.
+     */
+    intensity: number;
 };
 
 type ActiveRipple = {
@@ -87,7 +92,8 @@ function rippleMask(ripple: ActiveRipple, elapsedMs: number): string | null {
  *    point, which lingers and then fades back into the blur. Multiple taps
  *    ripple independently and combine.
  */
-export function CoverImage({ src, alt }: Props) {
+export function CoverImage({ src, alt, intensity }: Props) {
+    const t = Math.min(100, Math.max(0, intensity)) / 100;
     const hoverOverlayRef = useRef<HTMLImageElement>(null);
     const rippleOverlayRef = useRef<HTMLImageElement>(null);
     const ripplesRef = useRef<Map<number, ActiveRipple>>(new Map());
@@ -137,6 +143,10 @@ export function CoverImage({ src, alt }: Props) {
     }, []);
 
     const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+        if (t <= 0) {
+            return;
+        }
+
         const rect = event.currentTarget.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * 100;
         const y = ((event.clientY - rect.top) / rect.height) * 100;
@@ -146,6 +156,10 @@ export function CoverImage({ src, alt }: Props) {
     };
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        if (t <= 0) {
+            return;
+        }
+
         const rect = event.currentTarget.getBoundingClientRect();
         const x = ((event.clientX - rect.left) / rect.width) * 100;
         const y = ((event.clientY - rect.top) / rect.height) * 100;
@@ -167,35 +181,45 @@ export function CoverImage({ src, alt }: Props) {
         'radial-gradient(circle 200px at var(--reveal-x, 50%) var(--reveal-y, 50%), black 45%, transparent 100%)',
     ].join(', ');
 
+    const baseStyle: React.CSSProperties = {
+        filter: `blur(${12 * t}px) saturate(${1 - 0.08 * t})`,
+        opacity: 1 - 0.03 * t,
+    };
+
     return (
         <div
-            className="group relative h-[300px] w-full cursor-pointer overflow-hidden md:h-[380px]"
+            className={`group relative h-[300px] w-full overflow-hidden md:h-[380px] ${t > 0 ? 'cursor-pointer' : ''}`}
             onMouseMove={handleMouseMove}
             onClick={handleClick}
         >
             <img
                 src={src}
                 alt={alt}
-                className="absolute inset-0 h-full w-full scale-105 object-cover object-center opacity-97 blur-md saturate-[0.92]"
+                className="absolute inset-0 h-full w-full scale-105 object-cover object-center"
+                style={baseStyle}
             />
-            <img
-                ref={hoverOverlayRef}
-                src={src}
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
-                style={{
-                    maskImage: hoverMask,
-                    WebkitMaskImage: hoverMask,
-                }}
-            />
-            <img
-                ref={rippleOverlayRef}
-                src={src}
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-0"
-            />
+            {t > 0 && (
+                <>
+                    <img
+                        ref={hoverOverlayRef}
+                        src={src}
+                        alt=""
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+                        style={{
+                            maskImage: hoverMask,
+                            WebkitMaskImage: hoverMask,
+                        }}
+                    />
+                    <img
+                        ref={rippleOverlayRef}
+                        src={src}
+                        alt=""
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-0"
+                    />
+                </>
+            )}
         </div>
     );
 }

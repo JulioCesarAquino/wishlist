@@ -29,6 +29,7 @@ export type EventData = {
     font_color_primary: string | null;
     font_color_secondary: string | null;
     font_family: FontFamily | null;
+    cover_effect_intensity: number;
     is_published: boolean;
     visits_count: number;
     mp_public_key: string | null;

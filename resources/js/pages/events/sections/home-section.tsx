@@ -13,7 +13,11 @@ export function HomeSection({ event }: { event: EventData }) {
     return (
         <div>
             {event.cover_image_url && (
-                <CoverImage src={event.cover_image_url} alt={event.title} />
+                <CoverImage
+                    src={event.cover_image_url}
+                    alt={event.title}
+                    intensity={event.cover_effect_intensity}
+                />
             )}
 
             <div className="mx-auto max-w-3xl px-6 py-10 text-center">

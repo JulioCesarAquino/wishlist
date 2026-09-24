@@ -46,6 +46,7 @@ class EventShowController extends Controller
                 'font_color_primary' => $event->font_color_primary,
                 'font_color_secondary' => $event->font_color_secondary,
                 'font_family' => $event->font_family,
+                'cover_effect_intensity' => $event->cover_effect_intensity,
                 'is_published' => $event->is_published,
                 'visits_count' => $event->visits_count,
                 'mp_public_key' => $event->mp_public_key,
